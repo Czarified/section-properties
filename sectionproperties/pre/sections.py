@@ -37,6 +37,7 @@ class Geometry:
         self.holes = []
         self.perimeter = []
 
+
     def create_mesh(self, mesh_sizes):
         """Creates a quadratic triangular mesh from the Geometry object.
 
@@ -63,7 +64,18 @@ class Geometry:
 
             Mesh generated from the above geometry.
         """
+        # Verify inputs
+        ## !! DO NOT MERGE THIS, THIS IS FOR TESTING ONLY !! ##
+        mesh_div = 250
+        min_mesh_allowed = 0.1/mesh_div   # << This is why. Should dynamically lookup smallest side instead.
+        if min(mesh_sizes) < min_mesh_allowed:
+            raise ValueError(
+                f'Mesh size provided is too small! Min allowed is 1/{mesh_div} of smallest side length.'
+        )
+        ##
 
+
+        # Verify mesh_sizes match regions
         str = "Number of mesh_sizes ({0}), should match the number of regions ({1})".format(
             len(mesh_sizes), len(self.control_points)
         )
@@ -72,6 +84,7 @@ class Geometry:
         return pre.create_mesh(
             self.points, self.facets, self.holes, self.control_points, mesh_sizes)
 
+    
     def shift_section(self):
         """Shifts the cross-section parameters by the class variable vector *shift*."""
 
